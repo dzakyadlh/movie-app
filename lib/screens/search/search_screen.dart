@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 
-class BookingScreen extends StatelessWidget {
-  const BookingScreen({super.key});
+class SearchScreen extends StatelessWidget {
+  const SearchScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -99,5 +99,25 @@ class BookedList extends StatelessWidget {
             ),
           );
         }));
+  }
+}
+
+class HomeSearchBar extends StatefulWidget {
+  const HomeSearchBar({super.key});
+
+  @override
+  State<HomeSearchBar> createState() => _HomeSearchBarState();
+}
+
+class _HomeSearchBarState extends State<HomeSearchBar> {
+  String query = "";
+
+  @override
+  Widget build(BuildContext context) {
+    return const SearchBar(
+      padding: MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: 16.0)),
+      leading: Icon(Icons.search),
+      hintText: "Find places to visit...",
+    );
   }
 }

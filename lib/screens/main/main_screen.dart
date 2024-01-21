@@ -1,7 +1,8 @@
 import "package:flutter/material.dart";
+import "package:movieapp/screens/favorite/favorite_screen.dart";
 import "package:movieapp/screens/home/home_screen.dart";
 import "package:movieapp/screens/profile/profile_screen.dart";
-import 'package:movieapp/screens/search/booking_screen.dart';
+import 'package:movieapp/screens/search/search_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -20,8 +21,9 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   final List _pages = [
-    const HomeScreen(),
-    const BookingScreen(),
+    HomeScreen(),
+    const SearchScreen(),
+    const FavoriteScreen(),
     const ProfileScreen()
   ];
 

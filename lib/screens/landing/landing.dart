@@ -56,7 +56,9 @@ class LandingScreen extends StatelessWidget {
                               child: FilledButton(
                                 child: const Text("Login"),
                                 onPressed: () {
-                                  Navigator.pushNamed(context, '/login');
+                                  // Navigator.pushNamed(context, '/login');
+                                  Navigator.pushNamedAndRemoveUntil(
+                                      context, '/main', (_) => false);
                                 },
                               ),
                             )
