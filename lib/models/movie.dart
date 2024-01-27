@@ -1,11 +1,11 @@
 class Movie {
-  final String id;
-  final String name;
-  final String imageUrl;
-  final String casts;
-  final String category;
-  final String genre;
-  final String releaseYear;
+  String? id;
+  String? name;
+  String? imageUrl;
+  String? casts;
+  String? category;
+  List<String?> genre;
+  String? releaseYear;
 
   Movie({
     required this.id,

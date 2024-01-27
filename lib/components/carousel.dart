@@ -31,7 +31,7 @@ class _PosterCarouselState extends State<PosterCarousel> {
                 height: 300.0,
                 autoPlay: true,
                 viewportFraction: 1,
-                autoPlayInterval: const Duration(seconds: 2),
+                autoPlayInterval: const Duration(seconds: 5),
                 onPageChanged: (index, reason) =>
                     setState(() => activeIndex = index),
               ),

@@ -1,129 +1,114 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:carousel_slider/carousel_slider.dart';
 import "package:flutter/material.dart";
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:movieapp/components/carousel.dart';
 import 'package:movieapp/models/movie.dart';
+import 'package:movieapp/repository/movies_repo.dart';
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
-  final log = Logger('MyClassName');
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
-  // get popular
-  Future getUpcomingMovies() async {
-    // log.info('Hello there!');
+class _HomeScreenState extends State<HomeScreen> {
+  final log = Logger('Movies');
 
-    // try {
-    //   await dotenv.load(fileName: "config.env");
-    //   String apiKey = dotenv.get("API_KEY");
+  List<Movie> carouselMovies = [];
 
-    //   log.info('API Key: $apiKey');
+  List<Movie> popularMovies = [];
 
-    //   var response = await http.get(
-    //       Uri.https(
-    //         'moviesdatabase.p.rapidapi.com',
-    //         'movie/byYear/2021/',
-    //       ),
-    //       headers: {HttpHeaders.authorizationHeader: apiKey});
-    //   log.info('API Response: $response');
-    // } catch (e) {
-    //   log.severe('Error: $e');
-    // }
-    print('Hello there!');
+  List<Movie> latestMovies = [];
 
-    try {
-      await dotenv.load(fileName: "config.env");
-      String apiKey = dotenv.get("API_KEY");
-
-      print('API Key: $apiKey');
-
-      var response = await http.get(
-          Uri.https(
-            'moviesdatabase.p.rapidapi.com',
-            'titles?year=2022&genre=Action&info=base_info',
-          ),
-          headers: {
-            "X-RapidAPI-Key": apiKey,
-            "X-RapidAPI-Host": "moviesdatabase.p.rapidapi.com"
-          });
-      var jsonData = jsonDecode(response.body);
-      print(jsonData);
-      // for (var eachMovie in jsonData["results"]) {
-      //   final movie = Movie(
-      //       id: eachMovie["id"],
-      //       name: eachMovie["titleText"]["text"],
-      //       imageUrl: eachMovie["primaryImage"]["url"],
-      //       casts: "",
-      //       category: "category",
-      //       genre: "genre",
-      //       releaseYear: "releaseYear");
-      // }
-    } catch (e) {
-      print('Error: $e');
-    }
+  @override
+  void initState() {
+    super.initState();
+    _loadMovies();
   }
-  // get new and noteworthy
 
-  final List<String> sliderImages = [
-    "https://m.media-amazon.com/images/M/MV5BMTEwYjJhY2QtMDBlYS00NzNjLWJkMmMtYWFmNTkzZTI0YWMyXkEyXkFqcGdeQXVyMTM1ODg2MDk3._V1_.jpg",
-    "https://m.media-amazon.com/images/M/MV5BMzI0NmVkMjEtYmY4MS00ZDMxLTlkZmEtMzU4MDQxYTMzMjU2XkEyXkFqcGdeQXVyMzQ0MzA0NTM@._V1_.jpg",
-    "https://m.media-amazon.com/images/M/MV5BYzFiZjc1YzctMDY3Zi00NGE5LTlmNWEtN2Q3OWFjYjY1NGM2XkEyXkFqcGdeQXVyMTUyMTUzNjQ0._V1_.jpg",
-  ];
+  Future _loadMovies() async {
+    carouselMovies = await getCarouselMovies();
+    popularMovies = await getPopularMovies();
+    latestMovies = await getLatestMovies();
+  }
 
   @override
   Widget build(BuildContext context) {
-    getUpcomingMovies();
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            PosterCarousel(imagesUrl: sliderImages),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  CategoriesBar(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Popular",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w500),
+      body: FutureBuilder(
+          future: _loadMovies(),
+          builder: (context, snapshot) {
+            // if fetching done
+            if (snapshot.connectionState == ConnectionState.done) {
+              print('carouselMovies = $carouselMovies');
+              print('popularMovies = $popularMovies');
+              print('latestMovies = $latestMovies');
+              List<String> carouselImageUrl = [];
+              for (var movie in carouselMovies) {
+                carouselImageUrl.add(movie.imageUrl.toString());
+              }
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    PosterCarousel(imagesUrl: carouselImageUrl),
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        children: [
+                          CategoriesBar(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "Popular",
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.w500),
+                              ),
+                              TextButton(
+                                  onPressed: () {},
+                                  child: const Text("See all"))
+                            ],
+                          ),
+                          PosterCardSlider(
+                            movies: popularMovies,
+                          ),
+                          const SizedBox(
+                            height: 24,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "Latest Movies",
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.w500),
+                                textAlign: TextAlign.start,
+                              ),
+                              TextButton(
+                                  onPressed: () {},
+                                  child: const Text("See all"))
+                            ],
+                          ),
+                          PosterCardSlider(
+                            movies: latestMovies,
+                          ),
+                          const SizedBox(
+                            height: 24,
+                          ),
+                        ],
                       ),
-                      TextButton(onPressed: () {}, child: const Text("See all"))
-                    ],
-                  ),
-                  const PosterCardSlider(),
-                  const SizedBox(
-                    height: 24,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Latest Movies",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w500),
-                        textAlign: TextAlign.start,
-                      ),
-                      TextButton(onPressed: () {}, child: const Text("See all"))
-                    ],
-                  ),
-                  const PosterCardSlider()
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }),
     );
   }
 }
@@ -192,7 +177,9 @@ class Category extends StatelessWidget {
 }
 
 class PosterCardSlider extends StatelessWidget {
-  const PosterCardSlider({super.key});
+  final List<Movie> movies;
+
+  const PosterCardSlider({super.key, required this.movies});
 
   @override
   Widget build(BuildContext context) {
@@ -200,7 +187,7 @@ class PosterCardSlider extends StatelessWidget {
       height: 200,
       child: ListView.builder(
           shrinkWrap: true,
-          itemCount: 6,
+          itemCount: movies.length,
           scrollDirection: Axis.horizontal,
           itemBuilder: (_, index) {
             return Padding(
@@ -211,9 +198,10 @@ class PosterCardSlider extends StatelessWidget {
                   width: 135,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                      image: const DecorationImage(
+                      color: Colors.grey,
+                      image: DecorationImage(
                           image:
-                              AssetImage("assets/images/shibuyacrossing.jpg"),
+                              NetworkImage(movies[index].imageUrl.toString()),
                           fit: BoxFit.cover),
                       borderRadius: BorderRadius.circular(8)),
                 ),
