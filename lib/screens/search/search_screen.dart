@@ -1,123 +1,52 @@
 import "package:flutter/material.dart";
+import "package:movieapp/components/movielist.dart";
+import "package:movieapp/models/movie.dart";
+import "package:movieapp/repository/movies_repo.dart";
 
-class SearchScreen extends StatelessWidget {
+class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
+
+  @override
+  State<SearchScreen> createState() => _SearchScreenState();
+}
+
+class _SearchScreenState extends State<SearchScreen> {
+  List<Movie> movies = [];
+
+  Future _searchMovies(query) async {
+    updateList(await searchMovies(query));
+  }
+
+  void updateList(List<Movie> value) {
+    setState(() {
+      movies = value;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Bookings and Plans")),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: Theme.of(context).primaryColor,
-        child: const Icon(Icons.add),
-      ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding:
+              const EdgeInsets.only(top: 48, right: 16, left: 16, bottom: 16),
           child: Column(
-            children: [BookedList()],
+            children: [
+              SearchBar(
+                padding: const MaterialStatePropertyAll(
+                    EdgeInsets.symmetric(horizontal: 16.0)),
+                leading: const Icon(Icons.search),
+                hintText: "Search for a movie...",
+                onSubmitted: (value) => _searchMovies(value),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              MovieList(movies: movies)
+            ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class BookedList extends StatelessWidget {
-  BookedList({super.key});
-
-  final List<Map<String, dynamic>> bookedItems = [
-    {
-      "name": "Jakarta - Tokyo",
-      "type": "Flight",
-      "date": "19 January 2023",
-      "time": "21:00 - 05:00",
-      "image": ""
-    },
-    {
-      "name": "Disneyland Tokyo",
-      "type": "Attractions",
-      "date": "21 January 2023",
-      "time": "08:00 - Closed",
-      "image": ""
-    },
-    {
-      "name": "Universal Studio Tokyo",
-      "type": "Attractions",
-      "date": "23 January 2023",
-      "time": "08:00 - Closed",
-      "image": ""
-    },
-    {
-      "name": "Tokyo - Jakarta",
-      "type": "Flight",
-      "date": "31 January 2023",
-      "time": "21:00 - 05:00",
-      "image": ""
-    },
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-        shrinkWrap: true,
-        itemCount: bookedItems.length,
-        itemBuilder: ((context, index) {
-          final bookedItem = bookedItems[index];
-          return InkWell(
-            onTap: () {},
-            child: Card(
-              shape: RoundedRectangleBorder(
-                side: BorderSide(
-                  color: Theme.of(context).colorScheme.outline,
-                ),
-                borderRadius: const BorderRadius.all(Radius.circular(12)),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      bookedItem["name"],
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w500, fontSize: 16),
-                    ),
-                    Text(
-                      bookedItem["type"],
-                      style: const TextStyle(fontSize: 13),
-                    ),
-                    const SizedBox(
-                      height: 8.0,
-                    ),
-                    Text(bookedItem["date"]),
-                    Text(bookedItem["time"]),
-                  ],
-                ),
-              ),
-            ),
-          );
-        }));
-  }
-}
-
-class HomeSearchBar extends StatefulWidget {
-  const HomeSearchBar({super.key});
-
-  @override
-  State<HomeSearchBar> createState() => _HomeSearchBarState();
-}
-
-class _HomeSearchBarState extends State<HomeSearchBar> {
-  String query = "";
-
-  @override
-  Widget build(BuildContext context) {
-    return const SearchBar(
-      padding: MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: 16.0)),
-      leading: Icon(Icons.search),
-      hintText: "Find places to visit...",
     );
   }
 }
