@@ -52,6 +52,7 @@ Future<List<Movie>> getMovies(String url) async {
       }
       var releaseYear = eachMovie['releaseYear']?['year']?.toString() ?? 'null';
       var rating = eachMovie['ratingsSummary']?['aggregateRating'] ?? 0.0;
+      var plot = eachMovie['plot']?['plotText']?['plainText'] ?? '-';
       final movie = Movie(
         id: id,
         name: name,
@@ -61,6 +62,7 @@ Future<List<Movie>> getMovies(String url) async {
         genre: genres,
         releaseYear: releaseYear,
         rating: rating,
+        plot: plot,
       );
       movies.add(movie);
     }
@@ -68,5 +70,51 @@ Future<List<Movie>> getMovies(String url) async {
   } catch (e) {
     log.severe('Error: $e');
     throw Exception('Failed to fetch movies');
+  }
+}
+
+Future<Movie> getMovieById(String movieId) async {
+  try {
+    await dotenv.load(fileName: "config.env");
+    String apiUrl = 'https://moviesdatabase.p.rapidapi.com';
+    String apiKey = dotenv.get("API_KEY");
+
+    var response = await http
+        .get(Uri.parse('$apiUrl/titles/$movieId?info=base_info'), headers: {
+      "X-RapidAPI-Key": apiKey,
+      "X-RapidAPI-Host": "moviesdatabase.p.rapidapi.com"
+    });
+    var jsonData = jsonDecode(response.body);
+
+    var id = jsonData['results']?['id'].toString();
+    var name = jsonData['results']?['titleText']?['text']?.toString() ?? 'null';
+    var imageUrl =
+        jsonData['results']?['primaryImage']?['url']?.toString() ?? 'null';
+    var casts = 'No info';
+    var category =
+        jsonData['results']?['titleType']['text']?.toString() ?? 'null';
+    List<String> genres = [];
+    for (var genre in jsonData['results']?['genres']?['genres'] ?? []) {
+      genres.add(genre['text'].toString());
+    }
+    var releaseYear =
+        jsonData['results']?['releaseYear']?['year']?.toString() ?? 'null';
+    var rating =
+        jsonData['results']?['ratingsSummary']?['aggregateRating'] ?? 0.0;
+    var plot = jsonData['results']?['plot']?['plotText']?['plainText'] ?? '-';
+    final movie = Movie(
+        id: id,
+        name: name,
+        imageUrl: imageUrl,
+        casts: casts,
+        category: category,
+        genre: genres,
+        releaseYear: releaseYear,
+        rating: rating,
+        plot: plot);
+    return movie;
+  } catch (e) {
+    log.severe('Error: $e');
+    throw Exception('Failed to fetch movie data');
   }
 }

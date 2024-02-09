@@ -88,17 +88,3 @@ class LandingScreen extends StatelessWidget {
     );
   }
 }
-
-// class ImageSection extends StatelessWidget {
-//   const ImageSection({super.key, required this.image});
-
-//   final String image;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Image.asset(
-//       image,
-//       fit: BoxFit.fitWidth,
-//     );
-//   }
-// }

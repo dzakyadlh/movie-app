@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movieapp/screens/detail/detail.dart';
+import 'package:movieapp/screens/detail/detail_screen.dart';
 import 'package:movieapp/screens/favorite/favorite_screen.dart';
 import 'package:movieapp/screens/home/home_screen.dart';
 import 'package:movieapp/screens/landing/landing.dart';
@@ -35,11 +35,11 @@ class MyApp extends StatelessWidget {
           '/login': (context) => const LoginScreen(),
           '/signup': (context) => const SignupScreen(),
           '/main': (context) => const MainScreen(),
-          '/home': (context) => HomeScreen(),
+          '/home': (context) => const HomeScreen(),
           '/search': (context) => const SearchScreen(),
           '/favorite': (context) => const FavoriteScreen(),
           '/profile': (context) => const ProfileScreen(),
-          '/detail': (context) => const DetailScreen()
+          '/detail': (context) => DetailScreen()
         });
   }
 }
