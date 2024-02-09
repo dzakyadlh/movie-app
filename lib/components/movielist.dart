@@ -13,6 +13,8 @@ class MovieList extends StatefulWidget {
 class _MovieListState extends State<MovieList> {
   @override
   Widget build(BuildContext context) {
+    List<Movie> filteredMovies =
+        widget.movies.where((movie) => movie.imageUrl != "null").toList();
     if (widget.movies.isEmpty) {
       return const Padding(
         padding: EdgeInsets.only(top: 8.0),
@@ -26,12 +28,28 @@ class _MovieListState extends State<MovieList> {
     } else {
       return ListView.builder(
         shrinkWrap: true,
-        itemCount: widget.movies.length,
+        itemCount: filteredMovies.length,
         itemBuilder: (context, index) => ListTile(
           contentPadding: const EdgeInsets.all(16),
-          title: Text(widget.movies[index].name.toString()),
-          subtitle: Text(widget.movies[index].releaseYear.toString()),
-          leading: Image.network(widget.movies[index].imageUrl.toString()),
+          title: Text(
+            filteredMovies[index].name.toString(),
+            style: const TextStyle(fontWeight: FontWeight.w500),
+          ),
+          subtitle: Text(
+            filteredMovies[index].releaseYear.toString(),
+            style: const TextStyle(fontSize: 12),
+          ),
+          leading: SizedBox(
+            width: 40, // Adjust the width as needed
+            child: Image.network(
+              filteredMovies[index].imageUrl.toString(),
+              fit: BoxFit.fill,
+            ),
+          ),
+          trailing: Text(
+            filteredMovies[index].rating.toString(),
+            style: const TextStyle(color: Color.fromRGBO(50, 168, 115, 1)),
+          ),
         ),
       );
     }

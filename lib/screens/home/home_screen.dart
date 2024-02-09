@@ -40,9 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (context, snapshot) {
             // if fetching done
             if (snapshot.connectionState == ConnectionState.done) {
-              print('carouselMovies = $carouselMovies');
-              print('popularMovies = $popularMovies');
-              print('latestMovies = $latestMovies');
               List<String> carouselImageUrl = [];
               for (var movie in carouselMovies) {
                 carouselImageUrl.add(movie.imageUrl.toString());

@@ -6,9 +6,6 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Profile"),
-      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -83,9 +80,7 @@ class ProfileMenu extends StatelessWidget {
 
   final List<Map<String, dynamic>> menuItems = [
     {"name": "Account", "icon": Icons.person},
-    {"name": "My Bookings", "icon": Icons.card_travel},
-    {"name": "Wishlist", "icon": Icons.favorite},
-    {"name": "Promos", "icon": Icons.discount},
+    {"name": "Favorites", "icon": Icons.favorite},
     {"name": "Payment Methods", "icon": Icons.payment},
     {"name": "Notifications", "icon": Icons.notifications},
     {"name": "Accessibility", "icon": Icons.accessibility},

@@ -6,6 +6,7 @@ class Movie {
   String? category;
   List<String?> genre;
   String? releaseYear;
+  double? rating;
 
   Movie({
     required this.id,
@@ -15,5 +16,6 @@ class Movie {
     required this.category,
     required this.genre,
     required this.releaseYear,
+    required this.rating,
   });
 }

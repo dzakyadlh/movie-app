@@ -42,7 +42,10 @@ class _SearchScreenState extends State<SearchScreen> {
               const SizedBox(
                 height: 8,
               ),
-              MovieList(movies: movies)
+              SizedBox(
+                height: MediaQuery.of(context).size.height - 200,
+                child: MovieList(movies: movies),
+              ),
             ],
           ),
         ),

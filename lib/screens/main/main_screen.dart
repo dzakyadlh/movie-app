@@ -21,7 +21,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   final List _pages = [
-    HomeScreen(),
+    const HomeScreen(),
     const SearchScreen(),
     const FavoriteScreen(),
     const ProfileScreen()
@@ -31,6 +31,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
           currentIndex: _selectedIndex,
           onTap: _navigateBottomBar,
           showSelectedLabels: false,
@@ -38,6 +39,8 @@ class _MainScreenState extends State<MainScreen> {
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
             BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.favorite), label: 'Favorite'),
             BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile')
           ],
         ),
