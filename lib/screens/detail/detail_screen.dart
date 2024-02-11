@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movieapp/models/movie.dart';
+import 'package:movieapp/models/movie_id.dart';
 import 'package:movieapp/repository/movies_repo.dart';
 
 class DetailScreen extends StatefulWidget {
@@ -21,13 +22,12 @@ class _DetailScreenState extends State<DetailScreen> {
     rating: 0.0,
     plot: "plot",
   );
-  String movieId = "tt21344706";
 
-  @override
-  void initState() {
-    super.initState();
-    _getMovieById(movieId);
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _getMovieById(movieId);
+  // }
 
   Future _getMovieById(String movieId) async {
     movie = await getMovieById(movieId);
@@ -35,13 +35,28 @@ class _DetailScreenState extends State<DetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final movieId = ModalRoute.of(context)!.settings.arguments as MovieId;
+    _getMovieById(movieId.movieId.toString());
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(Icons.arrow_back)),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Container(
           constraints:
               BoxConstraints(minHeight: MediaQuery.of(context).size.height),
           child: FutureBuilder(
-              future: _getMovieById(movieId),
+              future: _getMovieById(movieId.movieId.toString()),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   return Column(
@@ -50,33 +65,28 @@ class _DetailScreenState extends State<DetailScreen> {
                         movie.imageUrl.toString(),
                         fit: BoxFit.fitHeight,
                       ),
-                      ListTile(
-                          leading: Text(
-                            movie.name.toString(),
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 28),
-                          ),
-                          trailing:
-                              RatingSection(rating: movie.rating.toString())),
-                      const ButtonSection(),
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
+                              movie.name.toString(),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 28),
+                            ),
+                            const ButtonSection(),
+                            Text(
                               movie.plot.toString(),
                               style: const TextStyle(fontSize: 14),
                               textAlign: TextAlign.justify,
                             ),
-                            ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: movie.genre.length,
-                                itemBuilder: (_, index) {
-                                  return Text("${movie.genre[index]} ");
-                                }),
                             const SizedBox(
-                              height: 4,
+                              height: 16,
+                            ),
+                            Text(movie.genre.join(', ')),
+                            const SizedBox(
+                              height: 16,
                             ),
                             Text(
                               "Released on ${movie.releaseYear}",
@@ -140,7 +150,7 @@ class ButtonSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Padding(
-      padding: EdgeInsets.all(8),
+      padding: EdgeInsets.all(16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [

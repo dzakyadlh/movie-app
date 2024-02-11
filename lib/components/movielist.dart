@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movieapp/models/movie.dart';
+import 'package:movieapp/models/movie_id.dart';
 
 class MovieList extends StatefulWidget {
   MovieList({super.key, required this.movies});
@@ -50,6 +51,11 @@ class _MovieListState extends State<MovieList> {
             filteredMovies[index].rating.toString(),
             style: const TextStyle(color: Color.fromRGBO(50, 168, 115, 1)),
           ),
+          onTap: () {
+            Navigator.pushNamed(context, '/detail',
+                arguments:
+                    MovieId(movieId: filteredMovies[index].id.toString()));
+          },
         ),
       );
     }

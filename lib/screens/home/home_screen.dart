@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import 'package:logging/logging.dart';
 import 'package:movieapp/components/carousel.dart';
 import 'package:movieapp/models/movie.dart';
+import 'package:movieapp/models/movie_id.dart';
 import 'package:movieapp/repository/movies_repo.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -190,7 +191,10 @@ class PosterCardSlider extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.only(right: 16),
               child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushNamed(context, '/detail',
+                      arguments: MovieId(movieId: movies[index].id.toString()));
+                },
                 child: Container(
                   width: 135,
                   padding: const EdgeInsets.all(16),

@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
           '/search': (context) => const SearchScreen(),
           '/favorite': (context) => const FavoriteScreen(),
           '/profile': (context) => const ProfileScreen(),
-          '/detail': (context) => DetailScreen()
+          '/detail': (context) => const DetailScreen()
         });
   }
 }

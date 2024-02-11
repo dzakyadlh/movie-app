@@ -8,17 +8,16 @@ import 'package:movieapp/models/movie.dart';
 final log = Logger('Movies');
 
 Future<List<Movie>> getCarouselMovies() async {
-  return getMovies('/titles?limit=5&info=base_info&year=2023&genre=Action');
+  return getMovies('/titles?limit=5&year=2023&genre=Action');
 }
 
 Future<List<Movie>> getPopularMovies() async {
   return getMovies(
-      '/titles/random?titleType=movie&info=base_info&endYear=2023&list=top_boxoffice_last_weekend_10');
+      '/titles/random?titleType=movie&endYear=2023&list=top_boxoffice_last_weekend_10');
 }
 
 Future<List<Movie>> getLatestMovies() async {
-  return getMovies(
-      '/titles?titleType=movie&endYear=2022&info=base_info&limit=10');
+  return getMovies('/titles?titleType=movie&endYear=2022&limit=10');
 }
 
 Future<List<Movie>> searchMovies(String query) async {
@@ -41,18 +40,15 @@ Future<List<Movie>> getMovies(String url) async {
     List<Movie> movies = [];
 
     for (var eachMovie in jsonData['results']) {
-      var id = eachMovie['id'].toString();
+      var id = eachMovie['id']?.toString();
       var name = eachMovie['titleText']?['text']?.toString() ?? 'null';
       var imageUrl = eachMovie['primaryImage']?['url']?.toString() ?? 'null';
-      var casts = 'No info';
-      var category = eachMovie['titleType']['text']?.toString() ?? 'null';
+      var casts = 'casts';
+      var category = 'category';
       List<String> genres = [];
-      for (var genre in eachMovie['genres']?['genres'] ?? []) {
-        genres.add(genre['text'].toString());
-      }
       var releaseYear = eachMovie['releaseYear']?['year']?.toString() ?? 'null';
       var rating = eachMovie['ratingsSummary']?['aggregateRating'] ?? 0.0;
-      var plot = eachMovie['plot']?['plotText']?['plainText'] ?? '-';
+      var plot = 'plot';
       final movie = Movie(
         id: id,
         name: name,
